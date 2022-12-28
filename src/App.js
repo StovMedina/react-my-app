@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import HelloWorld from "./components/HelloWorld";
+import React, { useState, useEffect, useRef } from "react";
 
 function App() {
+  const [randomUsers, setUsers] = useState("");
+  const exampleRef = useRef(null);
+
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=15")
+      .then((response) => response.json())
+      .then((data) => setUsers(data.results));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* string:{string} */}
+      <input
+        // value={string}
+        ref={exampleRef}
+        onChange={(e) => {
+          setUsers(e.target.value);
+        }}
+      />
+      <ul>
+        {randomUsers ? (
+          randomUsers.map((item) => (
+            <li key={item.id.value}>
+              {item.name.first}
+              <span> </span>
+              {item.name.last}
+              <span> </span>
+              <img src={item.picture.large} alt="profile picture"></img>
+            </li>
+          ))
+        ) : (
+          <span>Cargando Usuarios</span>
+        )}
+      </ul>
     </div>
   );
 }
